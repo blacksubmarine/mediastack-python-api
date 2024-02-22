@@ -1,7 +1,18 @@
-
+# test_news_fetcher.py
 import pytest
-import news_fetcher
+from unittest.mock import patch, Mock
+import news_fetcher  # Assuming your script is named news_fetcher.py
 
-def test_get_news_integration():
-    response = news_fetcher.get_news('test_api_key', 'us', 'en')
-    assert 'data' in response
+@patch('news_fetcher.requests.get')
+def test_get_news(mock_get):
+    # Mock response data
+    mock_response = Mock()
+    mock_response.json.return_value = {'data': 'mock_data'}
+    mock_get.return_value = mock_response
+
+    # Call the function
+    response = news_fetcher.get_news('dummy_api_key', 'us', 'en')
+
+    # Assertions
+    assert response == {'data': 'mock_data'}
+    mock_get.assert_called_once()

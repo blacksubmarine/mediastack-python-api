@@ -1,14 +1,21 @@
+# test_news_fetcher.py
+import unittest
+from unittest.mock import patch
+from news_fetcher import get_news  # Make sure this matches your module's name and function
 
-import pytest
-from unittest.mock import patch, Mock
-import news_fetcher
+class TestNewsFetcher(unittest.TestCase):
 
-@patch('news_fetcher.requests.get')
-def test_get_news(mock_get):
-    mock_response = Mock()
-    mock_response.json.return_value = {'data': 'mock_data'}
-    mock_get.return_value = mock_response
+    @patch('news_fetcher.requests.get')
+    def test_get_news(self, mock_get):
+        # Dummy data simulating the API response
+        mock_response = {
+            "data": [{"title": "Test News", "description": "This is a test news description."}]
+        }
+        mock_get.return_value.json.return_value = mock_response
 
-    response = news_fetcher.get_news('dummy_api_key', 'us', 'en')
-    assert response == {'data': 'mock_data'}
-    mock_get.assert_called_once()
+        api_key = 'dummy_api_key'
+        response = get_news(api_key, 'us', 'en')
+        self.assertEqual(response, mock_response)
+
+if __name__ == '__main__':
+    unittest.main()
